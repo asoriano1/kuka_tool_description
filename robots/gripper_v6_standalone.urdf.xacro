@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<robot name="gripper_v3" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find kuka_tool_description)/urdf/gripper_6.urdf.xacro"/>
+
+
+	<link name="world"/>
+	
+	<joint name="fixed" type="fixed">
+		<parent link="world"/>
+		<child link="base_link"/>
+	</joint>
+
+  <link name="base_link"/>
+      
+  <gripper_6 parent="base_link" prefix="">
+	<origin xyz="0 0 0" rpy="0 0 0" />    
+  </gripper_6>
+  
+  <ros_control/>
+  
+  <!--gripper_90120_v1 parent="base_link" prefix="">
+	<origin xyz="0 0 0" rpy="0 0 0" />    
+  </gripper_90120_v1 -->
+
+  <!--gripper_100125_v1 parent="base_link" prefix="">
+	<origin xyz="0 0 0" rpy="0 0 0" />    
+  </gripper_100125_v1-->
+
+  <!--gripper_170200_v1 parent="base_link" prefix="">
+	<origin xyz="0 0 0" rpy="0 0 0" />    
+  </gripper_170200_v1-->
+
+  <!--gripper_200250_v1 parent="base_link" prefix="">
+	<origin xyz="0 0 0" rpy="0 0 0" />    
+  </gripper_200250_v1-->
+
+</robot>
+
+
+

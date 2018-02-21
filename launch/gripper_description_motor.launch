@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+
+  <arg name="prefix" default="kuka_tool"/>
+  <arg name="launch_rviz" default="false"/>
+
+  <!-- Load robot description to parameter server -->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder '$(find kuka_tool_description)/robots/gripper_v6_standalone.urdf.xacro'  prefix:=$(arg prefix)"/>
+ 
+  <!-- node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher">
+	  <param name="use_gui" value="true"/>
+	  <remap from="joint_states" to="joint_states_fake"/>
+  </node-->
+	
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+	 
+  </node>
+
+  <!--rviz launch-->
+  <node if="$(arg launch_rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(find kuka_tool_description)/rviz/rviz.rviz" required="true" />
+
+  <!--node name="cinem_direct_finger_node" pkg="kuka_tool_description" type="finger_cinem_direct.py"/-->
+
+</launch>
