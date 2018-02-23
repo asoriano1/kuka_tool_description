@@ -109,13 +109,13 @@
 	<joint name="${prefix}gripper_motor_up_joint" type="continuous">
       <origin xyz="0 0.159 0.126" rpy="0 0 0"/>
       <parent link="${prefix}gripper_base_link"/>
-      <child link="${prefix}gripper_motorup_link"/>
+      <child link="${prefix}gripper_motor_up_link"/>
       <limit effort="100.0" velocity="0.005"/>
       <axis xyz="0 1 0"/>      
     </joint>
     
     <!-- ROS base_link to gripper motor up 1 coordinate system transform -->
-    <link name="${prefix}gripper_motorup_link">
+    <link name="${prefix}gripper_motor_up_link">
      <inertial>
       <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="2.0"/>
@@ -139,13 +139,13 @@
 	<joint name="${prefix}gripper_motor_down_joint" type="continuous">
       <origin xyz="0 0.159 0.287" rpy="0 0 0"/>
       <parent link="${prefix}gripper_base_link"/>
-      <child link="${prefix}gripper_motordown_link"/>
+      <child link="${prefix}gripper_motor_down_link"/>
       <limit effort="100.0" velocity="0.005"/>
       <axis xyz="0 1 0"/>      
     </joint>
     
     <!-- ROS base_link to gripper motor up 1 coordinate system transform -->
-    <link name="${prefix}gripper_motordown_link">
+    <link name="${prefix}gripper_motor_down_link">
      <inertial>
       <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
       <mass value="2.0"/>
@@ -171,7 +171,7 @@
       <parent link="${prefix}gripper_base_link"/>
       <child link="${prefix}gripper_prismatic_link"/>
       <limit effort="100.0" velocity="0.5" lower="-0.105" upper="0.105"/>
-      <axis xyz="0 1 0"/>      
+      <axis xyz="0 -1 0"/>      
     </joint>
     
     <!-- ROS base_link to gripper coordinate system transform -->
@@ -285,8 +285,8 @@
       </collision>
     </link>    
     
-   <xacro:motor_simple_transmission name="${prefix}gripper_motorup_joint"/>
-   <xacro:motor_simple_transmission name="${prefix}gripper_motordown_joint"/>
+   <xacro:motor_simple_transmission name="${prefix}gripper_motor_up_joint"/>
+   <xacro:motor_simple_transmission name="${prefix}gripper_motor_down_joint"/>
    <xacro:simple_transmission name="${prefix}gripper_revolute_joint"/>
    <xacro:simple_transmission name="${prefix}gripper_prismatic_joint"/>
   
