@@ -106,7 +106,7 @@
     </link>
     
 	<!-- continuous motor up m1-->
-	<joint name="${prefix}gripper_motorup_joint" type="continuous">
+	<joint name="${prefix}gripper_motor_up_joint" type="continuous">
       <origin xyz="0 0.159 0.126" rpy="0 0 0"/>
       <parent link="${prefix}gripper_base_link"/>
       <child link="${prefix}gripper_motorup_link"/>
@@ -136,7 +136,7 @@
     </link>
         
     <!-- continuous motor down m2-->
-	<joint name="${prefix}gripper_motordown_joint" type="continuous">
+	<joint name="${prefix}gripper_motor_down_joint" type="continuous">
       <origin xyz="0 0.159 0.287" rpy="0 0 0"/>
       <parent link="${prefix}gripper_base_link"/>
       <child link="${prefix}gripper_motordown_link"/>
@@ -202,7 +202,7 @@
 	  <origin xyz="0.0 0.0 0.2065" rpy="0 0 0"/>
       <parent link="${prefix}gripper_prismatic_link"/>
       <child link="${prefix}gripper_revolute_link"/>   
-      <limit lower="-0.35" upper="0.35" effort="0" velocity="${DEG2RAD * 330}"/>
+      <limit lower="0.0" upper="0.79" effort="0" velocity="${DEG2RAD * 330}"/>
       <axis xyz="-1 0 0"/>
     </joint>
     
