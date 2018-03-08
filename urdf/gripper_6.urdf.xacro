@@ -167,10 +167,10 @@
     
    <!-- prismatic -->
 	<joint name="${prefix}gripper_prismatic_joint" type="prismatic">
-      <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+      <origin xyz="0.0 0.105 0.0" rpy="0 0 0"/>
       <parent link="${prefix}gripper_base_link"/>
       <child link="${prefix}gripper_prismatic_link"/>
-      <limit effort="100.0" velocity="0.5" lower="-0.105" upper="0.105"/>
+      <limit effort="100.0" velocity="0.5" lower="-0.210" upper="0.0"/>
       <axis xyz="0 -1 0"/>      
     </joint>
     
