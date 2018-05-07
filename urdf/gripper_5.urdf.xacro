@@ -1,0 +1,301 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+
+  <!--xacro:include filename="$(find kuka_kr120_support)/urdf/kr120rs2500pro.gazebo.xacro" /-->
+
+  <xacro:property name="DEG2RAD" value="0.017453292519943295"/>
+  <xacro:property name="PI" value="3.141592"/>
+
+    <xacro:macro name="simple_transmission" params="name">
+        <transmission name="${name}_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${name}">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${name}_actuator">
+                <hardwareInterface>PositionJointInterface</hardwareInterface>
+                <mechanicalReduction>1.0</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+    
+    <xacro:macro name="motor_simple_transmission" params="name">
+        <transmission name="${name}_trans">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="${name}">
+                <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="${name}_actuator">
+                <hardwareInterface>PositionJointInterface</hardwareInterface>
+                <mechanicalReduction>1.0091</mechanicalReduction>
+            </actuator>
+        </transmission>
+    </xacro:macro>
+
+  <!-- ros control plugin -->
+  <xacro:macro name="ros_control">
+    <gazebo>
+      <plugin name="ros_control" filename="libgazebo_ros_control.so">
+        <!--<robotNamespace>/summit_xl</robotNamespace>-->
+        <!--robotNamespace>${prefix_frame}/</robotNamespace-->
+        <!--robotNamespace>summit_xl_a</robotNamespace-->
+        <robotParam>robot_description</robotParam>
+        <controlPeriod>0.001</controlPeriod>
+            <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+      </plugin>
+    </gazebo>
+  </xacro:macro>
+
+
+  <xacro:macro name="gripper_5" params="prefix parent *origin">
+
+	<!-- BASE -->
+    <joint name="${prefix}gripper_base_joint" type="fixed">
+      <xacro:insert_block name="origin"/>
+      <parent link="${parent}"/>
+      <child link="${prefix}gripper_base_link"/>
+    </joint>
+    
+    <!-- ROS base_link to gripper coordinate system transform -->
+    <link name="${prefix}gripper_base_link">
+     <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="20.0"/>
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+    </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 ${PI} 0"/>
+        <geometry>
+          <mesh filename="package://kuka_tool_description/meshes/tool/visual/body_v5.dae" />
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 ${PI} 0"/>
+        <geometry>
+          <mesh filename="package://kuka_tool_description/meshes/tool/collision/body_v5.stl" />
+        </geometry>
+      </collision>
+    </link>
+    
+    <!-- finger fixed -->
+	<joint name="${prefix}gripper_finger_fixed_joint" type="fixed">
+      <origin xyz="0.0 -0.15343 0.34843" rpy="0 ${PI} 0"/>
+      <parent link="${prefix}gripper_base_link"/>
+      <child link="${prefix}gripper_finger_fixed_link"/>     
+    </joint>
+    
+    <!-- finger fixed -->
+    <link name="${prefix}gripper_finger_fixed_link">
+     <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.2"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://kuka_tool_description/meshes/tool/visual/finger_5fixed.dae" />
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://kuka_tool_description/meshes/tool/collision/finger_5fixed.stl" />
+        </geometry>
+      </collision>
+    </link>
+    
+	<!-- continuous motor up m1-->
+	<joint name="${prefix}gripper_motor_up_joint" type="continuous">
+      <origin xyz="0 0.159 0.126" rpy="0 0 0"/>
+      <parent link="${prefix}gripper_base_link"/>
+      <child link="${prefix}gripper_motor_up_link"/>
+      <limit effort="100.0" velocity="0.005"/>
+      <axis xyz="0 1 0"/>      
+    </joint>
+    
+    <!-- ROS base_link to gripper motor up 1 coordinate system transform -->
+    <link name="${prefix}gripper_motor_up_link">
+     <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="2.0"/>
+      <inertia ixx="0.002" ixy="0.0" ixz="0.0" iyy="0.002" iyz="0.0" izz="0.002"/>
+    </inertial>
+      <visual>
+        <origin xyz="0 0.0 0.0" rpy="0 ${PI/2} 0"/>
+        <geometry>   
+		  <mesh filename="package://kuka_tool_description/meshes/tool/visual/usillo.dae" />
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0.0 0.0" rpy="0 ${PI/2} 0"/>
+        <geometry>
+			<cylinder length="0.250" radius="0.02"/>           
+        </geometry>
+      </collision>
+    </link>
+        
+    <!-- continuous motor down m2-->
+	<joint name="${prefix}gripper_motor_down_joint" type="continuous">
+      <origin xyz="0 0.159 0.287" rpy="0 0 0"/>
+      <parent link="${prefix}gripper_base_link"/>
+      <child link="${prefix}gripper_motor_down_link"/>
+      <limit effort="100.0" velocity="0.005"/>
+      <axis xyz="0 1 0"/>      
+    </joint>
+    
+    <!-- ROS base_link to gripper motor up 1 coordinate system transform -->
+    <link name="${prefix}gripper_motor_down_link">
+     <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="2.0"/>
+      <inertia ixx="0.002" ixy="0.0" ixz="0.0" iyy="0.002" iyz="0.0" izz="0.002"/>
+    </inertial>
+      <visual>
+        <origin xyz="0 0.0 0.0" rpy="0 ${PI/2} 0"/>
+        <geometry>   
+		  <mesh filename="package://kuka_tool_description/meshes/tool/visual/usillo.dae" />
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0.0 0.0" rpy="0 ${PI/2} 0"/>
+        <geometry>
+			<cylinder length="0.250" radius="0.02"/>           
+        </geometry>
+      </collision>
+    </link>
+    
+   <!-- prismatic -->
+	<joint name="${prefix}gripper_prismatic_joint" type="prismatic">
+      <origin xyz="0.0 0.105 0.0" rpy="0 0 0"/>
+      <parent link="${prefix}gripper_base_link"/>
+      <child link="${prefix}gripper_prismatic_link"/>
+      <limit effort="100.0" velocity="0.5" lower="-0.210" upper="0.0"/>
+      <axis xyz="0 -1 0"/>      
+    </joint>
+    
+    <!-- ROS base_link to gripper coordinate system transform -->
+    <link name="${prefix}gripper_prismatic_link">
+     <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="2.0"/>
+      <inertia ixx="0.002" ixy="0.0" ixz="0.0" iyy="0.002" iyz="0.0" izz="0.002"/>
+    </inertial>
+      <visual>
+        <origin xyz="0 0 0.2065" rpy="0 ${PI/2} 0"/>
+        <geometry>   
+			<!--cylinder length="0.3" radius="0.01"/-->
+           <box size="0.03 0.03 0.03"/>
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0.2065" rpy="0 ${PI/2} 0"/>
+        <geometry>
+			<!--cylinder length="0.3" radius="0.01"/-->
+           <box size="0.03 0.03 0.03"/>
+        </geometry>
+      </collision>
+    </link>
+    
+    <!-- revolute -->
+	<joint name="${prefix}gripper_revolute_joint" type="revolute">
+	  <origin xyz="0.0 0.0 0.2065" rpy="0 0 0"/>
+      <parent link="${prefix}gripper_prismatic_link"/>
+      <child link="${prefix}gripper_revolute_link"/>   
+      <limit lower="0.0" upper="0.79" effort="0" velocity="${DEG2RAD * 330}"/>
+      <axis xyz="-1 0 0"/>
+    </joint>
+    
+    <!-- ROS base_link to gripper coordinate system transform -->
+    <link name="${prefix}gripper_revolute_link">
+     <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="2.0"/>
+      <inertia ixx="0.002" ixy="0.0" ixz="0.0" iyy="0.002" iyz="0.0" izz="0.002"/>
+    </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="${PI} 0 0"/>
+        <geometry>
+          <mesh filename="package://kuka_tool_description/meshes/tool/visual/axis.dae" />
+          <!--cylinder length="0.3" radius="0.01"/-->
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="${PI} 0 0"/>
+        <geometry>
+          <mesh filename="package://kuka_tool_description/meshes/tool/collision/axis.stl" />
+          <!--cylinder length="0.3" radius="0.01"/-->
+        </geometry>
+      </collision>
+    </link>
+    
+	<!-- finger left -->
+	<joint name="${prefix}gripper_finger_left_joint" type="fixed">
+      <origin xyz="-0.12265 0.0 0.035" rpy="0 ${PI} 0"/>
+      <parent link="${prefix}gripper_revolute_link"/>
+      <child link="${prefix}gripper_finger_left_link"/>     
+    </joint>
+    
+    <!-- finger left -->
+    <link name="${prefix}gripper_finger_left_link">
+     <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.2"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://kuka_tool_description/meshes/tool/visual/finger_5.dae" />
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://kuka_tool_description/meshes/tool/collision/finger_5.stl" />
+        </geometry>         
+      </collision>
+    </link>
+
+	<!-- finger left -->
+	<joint name="${prefix}gripper_finger_right_joint" type="fixed">
+      <origin xyz="0.12265 0.0 0.035" rpy="0 ${PI} 0"/>
+      <parent link="${prefix}gripper_revolute_link"/>
+      <child link="${prefix}gripper_finger_right_link"/>     
+    </joint>
+    
+    <!-- finger left -->
+    <link name="${prefix}gripper_finger_right_link">
+     <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.2"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://kuka_tool_description/meshes/tool/visual/finger_5sym.dae" />
+        </geometry>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <mesh filename="package://kuka_tool_description/meshes/tool/collision/finger_5sym.stl" />
+        </geometry>
+      </collision>
+    </link>    
+    
+   <xacro:motor_simple_transmission name="${prefix}gripper_motor_up_joint"/>
+   <xacro:motor_simple_transmission name="${prefix}gripper_motor_down_joint"/>
+   <xacro:simple_transmission name="${prefix}gripper_revolute_joint"/>
+   <xacro:simple_transmission name="${prefix}gripper_prismatic_joint"/>
+  
+   <gazebo reference="${prefix}gripper_prismatic_joint">
+   </gazebo>
+   <gazebo reference="${prefix}gripper_revolute_joint">
+   </gazebo>
+   
+  </xacro:macro>
+</robot>
+
+
