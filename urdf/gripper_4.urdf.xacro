@@ -77,6 +77,23 @@
       </collision>
     </link>
     
+     <!-- QR marker -->
+    <!-- 160 de ancho 185 de alto respecto a tool0 o gripper_base_link-->
+	<joint name="${prefix}gripper_marker_joint" type="fixed">
+      <origin xyz="0.0 -0.160 0.2065" rpy="0 0 ${-PI}"/>
+      <parent link="${prefix}gripper_base_link"/>
+      <child link="${prefix}gripper_marker_fixed_link"/>     
+    </joint>
+    
+    <!-- QR marker -->
+    <link name="${prefix}gripper_marker_fixed_link">
+     <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>      
+    </link>
+    
     <!-- finger fixed -->
 	<joint name="${prefix}gripper_finger_fixed_joint" type="fixed">
       <origin xyz="0.0 -0.15343 0.34843" rpy="0 ${PI} 0"/>
